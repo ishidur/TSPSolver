@@ -63,7 +63,6 @@ def update_node(band_array, index, weights):
 
 
 def update_band(band_array, weights):
-    # TODO do in parallel
     for i in range(node_num):
         band_array[i, :] += update_node(band_array, i, weights)
     return band_array
