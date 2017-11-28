@@ -1,21 +1,31 @@
 import en_config
 import numpy as np
 import matplotlib.pyplot as plt
-if(en_config.read_file):
+
+if (en_config.read_file):
     np_cities = np.genfromtxt(en_config.city_file, delimiter=',')
     city_num = np_cities.shape[0]
+    width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
+    width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
+    np_cities[:, 0] -= np.min(np_cities[:, 0])
+    np_cities[:, 0] /= width_x * 1.1
+    np_cities[:, 1] -= np.min(np_cities[:, 1])
+    np_cities[:, 1] /= width_y * 1.1
+    figsize = (en_config.window_size, en_config.window_size * width_y / width_x)
 else:
     city_num = en_config.city_num
     np_cities = np.random.random((city_num, 2))
+    figsize = (en_config.window_size, en_config.window_size)
 
 node_num = int(city_num * 2.5 + 0.5)
 angles = np.linspace(0, 2 * np.pi, node_num)
 np_band = np.array(
     [en_config.node_radius * np.sin(angles) + 0.5, en_config.node_radius * np.cos(angles) + 0.5]).transpose()
-fig = plt.figure(figsize=(5, 5))
-plt.scatter(np_cities[:, 0], np_cities[:, 1])
+fig = plt.figure(figsize=figsize)
+plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
 elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
 plt.grid()
+
 plt.xlim(0, 1)
 plt.ylim(0, 1)
 
@@ -60,7 +70,8 @@ def update_band(band_array, weights):
 
 
 k = en_config.k_init
-for i in range(en_config.iter_lim):
+# for i in range(en_config.iter_lim):
+while True:
     k = np.amax([0.01, k * en_config.k_decay])
     weights = calc_weight_matrix(np_band, k)
     np_band = update_band(np_band, weights)
