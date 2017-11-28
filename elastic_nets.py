@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 city_num = 10
 node_num = int(city_num * 2.5 + 0.5)
 node_radius = 0.1
-iter_lim = 1000000
+iter_lim = 1000
 k_init = 0.2
 k_decay = 0.99
 
@@ -67,5 +67,6 @@ for i in range(iter_lim):
     k = np.amax([0.01, k * k_decay])
     weights = calc_weight_matrix(np_band, k)
     np_band = update_band(np_band, weights)
-    elastic_band.set_data(np_band[:, 0], np_band[:, 1])
+    circle_band = np.vstack((np_band, np_band[0, :]))
+    elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
     plt.pause(.01)
