@@ -1,6 +1,7 @@
 from config import ENConfig as en_config
 import numpy as np
 import matplotlib.pyplot as plt
+import asyncio
 
 window_size = 5
 dpi = 150
@@ -79,12 +80,13 @@ def update_band(band_array, weights):
     return new_band_array
 
 
-k = k_init
-# for i in range(iter_lim):
-while True:
-    k = np.amax([0.01, k * k_decay])
-    weights = calc_weight_matrix(np_band, k)
-    np_band = update_band(np_band, weights)
-    circle_band = np.vstack((np_band, np_band[0, :]))
-    elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
-    plt.pause(.01)
+if __name__ == "__main__":
+    k = k_init
+    # for i in range(iter_lim):
+    while True:
+        k = np.amax([0.01, k * k_decay])
+        weights = calc_weight_matrix(np_band, k)
+        np_band = update_band(np_band, weights)
+        circle_band = np.vstack((np_band, np_band[0, :]))
+        elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
+        plt.pause(.01)
