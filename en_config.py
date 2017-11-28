@@ -1,9 +1,9 @@
 # parameters
 window_size = 6
-read_file = True
+read_file = False
 city_file = 'qatar.csv'
 # city_file = 'coordinates.csv'
-city_num = 50
+city_num = 30
 node_radius = 0.1
 # node_radius = 100
 iter_lim = 10000

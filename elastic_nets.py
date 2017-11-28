@@ -26,8 +26,8 @@ plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
 elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
 plt.grid()
 
-plt.xlim(0, 1)
-plt.ylim(0, 1)
+# plt.xlim(0, 1)
+# plt.ylim(0, 1)
 
 
 def phi(distance, k):
@@ -64,9 +64,10 @@ def update_node(band_array, index, weights):
 
 
 def update_band(band_array, weights):
+    new_band_array = band_array.copy()
     for i in range(node_num):
-        band_array[i, :] += update_node(band_array, i, weights)
-    return band_array
+        new_band_array[i, :] += update_node(band_array, i, weights)
+    return new_band_array
 
 
 k = en_config.k_init
