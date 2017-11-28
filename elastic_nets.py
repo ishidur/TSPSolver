@@ -2,14 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # parameters
-city_num = 10
-node_num = int(city_num * 2.5 + 0.5)
+city_file = 'coordinates.csv'
 node_radius = 0.1
 iter_lim = 1000
 k_init = 0.2
 k_decay = 0.99
 
-np_cities = np.random.random((city_num, 2))
+np_cities = np.genfromtxt(city_file, delimiter=',')
+city_num = np_cities.shape[0]
+node_num = int(city_num * 2.5 + 0.5)
+
+# np_cities = np.random.random((city_num, 2))
 angles = np.linspace(0, 2 * np.pi, node_num)
 np_band = np.array([node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
 fig = plt.figure(figsize=(5, 5))
@@ -22,8 +25,8 @@ alpha = 0.2
 beta = 2.1
 
 
-def phi(dist, k):
-    return np.exp(-dist ** 2 / (2 * k) ** 2)
+def phi(distance, k):
+    return np.exp(-distance ** 2 / (2 * k) ** 2)
 
 
 def dist(x, y):
@@ -37,11 +40,11 @@ def calc_dist_matrix(band_array, city_array):
 
 def calc_weight_matrix(band_array, k):
     dist_matrix = calc_dist_matrix(band_array, np_cities)
-    weights = phi(dist_matrix, k)
+    weight_matrix = phi(dist_matrix, k)
     for city_i in range(city_num):
-        sum = np.sum(weights[city_i, :])
-        weights[city_i, :] /= sum
-    return weights
+        sum = np.sum(weight_matrix[city_i, :])
+        weight_matrix[city_i, :] /= sum
+    return weight_matrix
 
 
 def update_node(band_array, index, weights):
