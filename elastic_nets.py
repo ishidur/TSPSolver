@@ -3,18 +3,21 @@ import matplotlib.pyplot as plt
 
 # parameters
 city_file = 'coordinates.csv'
-node_radius = 0.1
+band_radius_init = 0.1
 iter_lim = 1000
 k_init = 0.2
 k_decay = 0.99
+center_x = 0.5
+center_y = 0.5
 
 np_cities = np.genfromtxt(city_file, delimiter=',')
+print('read complete')
 city_num = np_cities.shape[0]
 node_num = int(city_num * 2.5 + 0.5)
 
 # np_cities = np.random.random((city_num, 2))
 angles = np.linspace(0, 2 * np.pi, node_num)
-np_band = np.array([node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
+np_band = np.array([band_radius_init * np.sin(angles) + center_x, band_radius_init * np.cos(angles) + center_y]).transpose()
 fig = plt.figure(figsize=(5, 5))
 plt.scatter(np_cities[:, 0], np_cities[:, 1])
 elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
