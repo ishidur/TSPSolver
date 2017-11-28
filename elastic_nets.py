@@ -17,7 +17,8 @@ node_num = int(city_num * 2.5 + 0.5)
 
 # np_cities = np.random.random((city_num, 2))
 angles = np.linspace(0, 2 * np.pi, node_num)
-np_band = np.array([band_radius_init * np.sin(angles) + center_x, band_radius_init * np.cos(angles) + center_y]).transpose()
+np_band = np.array(
+    [band_radius_init * np.sin(angles) + center_x, band_radius_init * np.cos(angles) + center_y]).transpose()
 fig = plt.figure(figsize=(5, 5))
 plt.scatter(np_cities[:, 0], np_cities[:, 1])
 elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
