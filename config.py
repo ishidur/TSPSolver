@@ -1,4 +1,4 @@
-# parameters
+# config
 class ENConfig:
     read_file = False
     city_file = 'qatar.csv'

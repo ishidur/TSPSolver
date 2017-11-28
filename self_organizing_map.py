@@ -1,30 +1,42 @@
+from config import SOMConfig as config
 import numpy as np
 import matplotlib.pyplot as plt
 
-# parameters
-city_file = 'coordinates.csv'
+window_size = 5
+dpi = 150
 node_radius = 0.1
-iter_lim = 100000
+iter_lim = 10000
 k_init = 0.2
 k_decay = 0.99
+alpha = 0.2
+beta = 2.1
 
-# np_cities = np.genfromtxt(city_file, delimiter=',')
-# city_num = np_cities.shape[0]
-
-city_num = 50
-np_cities = np.random.random((city_num, 2))
+if (config.read_file):
+    np_cities = np.genfromtxt(config.city_file, delimiter=',')
+    city_num = np_cities.shape[0]
+    width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
+    width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
+    np_cities[:, 0] -= np.min(np_cities[:, 0])
+    np_cities[:, 0] /= width_x * 1.1
+    np_cities[:, 1] -= np.min(np_cities[:, 1])
+    np_cities[:, 1] /= width_y * 1.1
+    figsize = (window_size, window_size * width_y / width_x)
+else:
+    city_num = config.city_num
+    np_cities = np.random.random((city_num, 2))
+    figsize = (window_size, window_size)
 
 node_num = int(city_num * 2.5 + 0.5)
 angles = np.linspace(0, 2 * np.pi, node_num)
-np_band = np.array([node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
-fig = plt.figure(figsize=(5, 5))
-plt.scatter(np_cities[:, 0], np_cities[:, 1])
+np_band = np.array(
+    [node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
+fig = plt.figure(figsize=figsize, dpi=dpi)
+plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
 elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
 plt.grid()
-plt.xlim(0, 1)
-plt.ylim(0, 1)
-alpha = 0.2
-beta = 2.1
+
+# plt.xlim(0, 1)
+# plt.ylim(0, 1)
 
 
 def phi(distance, k):
@@ -61,17 +73,19 @@ def update_node(band_array, index, weights):
 
 
 def update_band(band_array, weights):
-    # TODO do in parallel
+    new_band_array = band_array.copy()
     for i in range(node_num):
-        band_array[i, :] += update_node(band_array, i, weights)
-    return band_array
+        new_band_array[i, :] += update_node(band_array, i, weights)
+    return new_band_array
 
 
-k = k_init
-for i in range(iter_lim):
-    k = np.amax([0.01, k * k_decay])
-    weights = calc_weight_matrix(np_band, k)
-    np_band = update_band(np_band, weights)
-    circle_band = np.vstack((np_band, np_band[0, :]))
-    elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
-    plt.pause(.01)
+if __name__ == "__main__":
+    k = k_init
+    # for i in range(iter_lim):
+    while True:
+        k = np.amax([0.01, k * k_decay])
+        weights = calc_weight_matrix(np_band, k)
+        np_band = update_band(np_band, weights)
+        circle_band = np.vstack((np_band, np_band[0, :]))
+        elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
+        plt.pause(.01)

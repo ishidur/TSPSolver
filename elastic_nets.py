@@ -1,7 +1,6 @@
-from config import ENConfig as en_config
+from config import ENConfig as config
 import numpy as np
 import matplotlib.pyplot as plt
-import asyncio
 
 window_size = 5
 dpi = 150
@@ -12,8 +11,8 @@ k_decay = 0.99
 alpha = 0.2
 beta = 2.1
 
-if (en_config.read_file):
-    np_cities = np.genfromtxt(en_config.city_file, delimiter=',')
+if (config.read_file):
+    np_cities = np.genfromtxt(config.city_file, delimiter=',')
     city_num = np_cities.shape[0]
     width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
     width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
@@ -23,7 +22,7 @@ if (en_config.read_file):
     np_cities[:, 1] /= width_y * 1.1
     figsize = (window_size, window_size * width_y / width_x)
 else:
-    city_num = en_config.city_num
+    city_num = config.city_num
     np_cities = np.random.random((city_num, 2))
     figsize = (window_size, window_size)
 
