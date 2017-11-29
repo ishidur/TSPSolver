@@ -1,20 +1,23 @@
 class Files:
-    qatar = './coordinates/qatar.csv'
-    western_sahara = './coordinates/western_sahara.csv'
-    uruguay = './coordinates/uruguay.csv'
-    djibouti = './coordinates/djibouti.csv'
-    random_10_cities = './coordinates/random_10_cities.csv'
-    random_30_cities = './coordinates/random_30_cities.csv'
+    path = './coordinates/'
+    qatar = 'qatar.csv'
+    western_sahara = 'western_sahara.csv'
+    uruguay = 'uruguay.csv'
+    djibouti = 'djibouti.csv'
+    random_10_cities = 'random_10_cities.csv'
+    random_30_cities = 'random_30_cities.csv'
 
 
 # config
 class ENConfig:
     read_file = True
+    file_path = Files.path
     city_file = Files.random_30_cities
     city_num = 30
 
 
 class SOMConfig:
     read_file = False
+    file_path = Files.path
     city_file = Files.random_10_cities
     city_num = 30
