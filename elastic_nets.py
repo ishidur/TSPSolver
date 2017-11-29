@@ -11,35 +11,6 @@ alpha = 0.2
 beta = 2.1
 iter_lim = 10000
 
-if (Config.read_file):
-    np_cities = np.genfromtxt(Config.city_file, delimiter=',')
-    city_num = np_cities.shape[0]
-    width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
-    width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
-    np_cities[:, 0] -= np.min(np_cities[:, 0])
-    np_cities[:, 0] /= width_x
-    np_cities[:, 1] -= np.min(np_cities[:, 1])
-    np_cities[:, 1] /= width_y
-    figsize = (window_size, window_size * width_y / width_x)
-else:
-    city_num = Config.city_num
-    np_cities = np.random.random((city_num, 2))
-    figsize = (window_size, window_size)
-
-node_num = int(city_num * 2.5 + 0.5)
-angles = np.linspace(0, 2 * np.pi, node_num)
-np_band = np.array(
-    [node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
-fig = plt.figure(figsize=figsize, dpi=dpi)
-plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
-elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
-plt.title("iteration=" + str(0))
-plt.grid()
-
-
-# plt.xlim(0, 1)
-# plt.ylim(0, 1)
-
 
 def phi(distance, k):
     return np.exp(-distance ** 2 / (2 * k) ** 2)
@@ -82,6 +53,31 @@ def update_band(band_array, weights):
 
 
 if __name__ == "__main__":
+    if (Config.read_file):
+        np_cities = np.genfromtxt(Config.city_file, delimiter=',')
+        city_num = np_cities.shape[0]
+        width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
+        width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
+        width=np.amax([width_x, width_y])
+        np_cities[:, 0] -= np.min(np_cities[:, 0])
+        np_cities[:, 0] /= width
+        np_cities[:, 1] -= np.min(np_cities[:, 1])
+        np_cities[:, 1] /= width
+        figsize = (window_size, window_size)
+    else:
+        city_num = Config.city_num
+        np_cities = np.random.random((city_num, 2))
+        figsize = (window_size, window_size)
+
+    node_num = int(city_num * 2.5 + 0.5)
+    angles = np.linspace(0, 2 * np.pi, node_num)
+    np_band = np.array(
+        [node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+    plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
+    elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
+    plt.title("iteration=" + str(0))
+    plt.grid()
     k = k_init
     i = 1
     # for i in range(iter_lim):
