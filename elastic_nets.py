@@ -1,6 +1,7 @@
 from config import ENConfig as Config
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 window_size = 5
 dpi = 100
@@ -9,36 +10,7 @@ k_init = 0.2
 k_decay = 0.99
 alpha = 0.2
 beta = 2.1
-iter_lim = 10000
-
-if (Config.read_file):
-    np_cities = np.genfromtxt(Config.city_file, delimiter=',')
-    city_num = np_cities.shape[0]
-    width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
-    width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
-    np_cities[:, 0] -= np.min(np_cities[:, 0])
-    np_cities[:, 0] /= width_x
-    np_cities[:, 1] -= np.min(np_cities[:, 1])
-    np_cities[:, 1] /= width_y
-    figsize = (window_size, window_size * width_y / width_x)
-else:
-    city_num = Config.city_num
-    np_cities = np.random.random((city_num, 2))
-    figsize = (window_size, window_size)
-
-node_num = int(city_num * 2.5 + 0.5)
-angles = np.linspace(0, 2 * np.pi, node_num)
-np_band = np.array(
-    [node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
-fig = plt.figure(figsize=figsize, dpi=dpi)
-plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
-elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
-plt.title("iteration=" + str(0))
-plt.grid()
-
-
-# plt.xlim(0, 1)
-# plt.ylim(0, 1)
+iter_lim = 401
 
 
 def phi(distance, k):
@@ -50,7 +22,8 @@ def dist(x, y):
 
 
 def calc_dist_matrix(band_array, city_array):
-    dist_matrix = np.array([[dist(node, city) for node in band_array] for city in city_array])
+    dist_matrix = np.array([[dist(node, city)
+                             for node in band_array] for city in city_array])
     return dist_matrix
 
 
@@ -68,7 +41,8 @@ def update_node(band_array, index, weights):
     forward_i = (index + 1) % node_num
     attraction_force = np.zeros(2)
     for city_i in range(city_num):
-        attraction_force += weights[city_i, index] * (np_cities[city_i, :] - band_array[index, :])
+        attraction_force += weights[city_i, index] * \
+            (np_cities[city_i, :] - band_array[index, :])
     delta_node = alpha * attraction_force + beta * k * (
         band_array[forward_i, :] - 2 * band_array[index, :] + band_array[back_i, :])
     return delta_node
@@ -82,6 +56,33 @@ def update_band(band_array, weights):
 
 
 if __name__ == "__main__":
+    if (Config.read_file):
+        np_cities = np.genfromtxt(
+            Config.file_path + Config.city_file, delimiter=',')
+        city_num = np_cities.shape[0]
+        width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
+        width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
+        width = np.amax([width_x, width_y])
+        np_cities[:, 0] -= np.min(np_cities[:, 0])
+        np_cities[:, 0] /= width
+        np_cities[:, 1] -= np.min(np_cities[:, 1])
+        np_cities[:, 1] /= width
+        figsize = (window_size, window_size)
+    else:
+        city_num = Config.city_num
+        # “continuous uniform” distribution random
+        np_cities = np.random.random((city_num, 2))
+        figsize = (window_size, window_size)
+
+    node_num = int(city_num * 2.5 + 0.5)
+    angles = np.linspace(0, 2 * np.pi, node_num)
+    np_band = np.array(
+        [node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+    plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
+    elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
+    plt.title("iteration=" + str(0))
+    plt.grid()
     k = k_init
     i = 1
     # for i in range(iter_lim):
@@ -94,3 +95,12 @@ if __name__ == "__main__":
         elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
         i += 1
         plt.pause(.001)
+    # filename = 'iteration-' + str(iter_lim - 1) + '.png'
+    # file_path = './results/' + Config.city_file.replace(
+    #     '.csv', '') + '/' + filename
+    # directory = os.path.dirname(file_path)
+    # try:
+    #     os.stat(directory)
+    # except:
+    #     os.mkdir(directory)
+    # plt.savefig(file_path)
