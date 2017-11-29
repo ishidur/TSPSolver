@@ -33,6 +33,7 @@ np_band = np.array(
 fig = plt.figure(figsize=figsize, dpi=dpi)
 plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
 elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
+plt.title("iteration="+str(0))
 plt.grid()
 
 # plt.xlim(0, 1)
@@ -81,11 +82,14 @@ def update_band(band_array, weights):
 
 if __name__ == "__main__":
     k = k_init
+    i = 1
     # for i in range(iter_lim):
     while True:
         k = np.amax([0.01, k * k_decay])
         weights = calc_weight_matrix(np_band, k)
         np_band = update_band(np_band, weights)
         circle_band = np.vstack((np_band, np_band[0, :]))
+        plt.title("iteration="+str(i))
         elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
+        i += 1
         plt.pause(.01)
