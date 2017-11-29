@@ -1,8 +1,8 @@
 # config
 class ENConfig:
-    read_file = False
-    city_file = 'qatar.csv'
-    # city_file = 'coordinates.csv'
+    read_file = True
+    city_file = './coordinates/qatar.csv'
+    # city_file = './coordinates/coordinates.csv'
     city_num = 30
 
 

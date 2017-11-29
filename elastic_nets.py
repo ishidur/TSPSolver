@@ -1,28 +1,28 @@
-from config import ENConfig as config
+from config import ENConfig as Config
 import numpy as np
 import matplotlib.pyplot as plt
 
 window_size = 5
-dpi = 150
+dpi = 100
 node_radius = 0.1
-iter_lim = 10000
 k_init = 0.2
 k_decay = 0.99
 alpha = 0.2
 beta = 2.1
+iter_lim = 10000
 
-if (config.read_file):
-    np_cities = np.genfromtxt(config.city_file, delimiter=',')
+if (Config.read_file):
+    np_cities = np.genfromtxt(Config.city_file, delimiter=',')
     city_num = np_cities.shape[0]
     width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
     width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
     np_cities[:, 0] -= np.min(np_cities[:, 0])
-    np_cities[:, 0] /= width_x * 1.1
+    np_cities[:, 0] /= width_x
     np_cities[:, 1] -= np.min(np_cities[:, 1])
-    np_cities[:, 1] /= width_y * 1.1
+    np_cities[:, 1] /= width_y
     figsize = (window_size, window_size * width_y / width_x)
 else:
-    city_num = config.city_num
+    city_num = Config.city_num
     np_cities = np.random.random((city_num, 2))
     figsize = (window_size, window_size)
 
@@ -33,8 +33,9 @@ np_band = np.array(
 fig = plt.figure(figsize=figsize, dpi=dpi)
 plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
 elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
-plt.title("iteration="+str(0))
+plt.title("iteration=" + str(0))
 plt.grid()
+
 
 # plt.xlim(0, 1)
 # plt.ylim(0, 1)
@@ -84,12 +85,12 @@ if __name__ == "__main__":
     k = k_init
     i = 1
     # for i in range(iter_lim):
-    while True:
+    while plt.get_fignums():
         k = np.amax([0.01, k * k_decay])
         weights = calc_weight_matrix(np_band, k)
         np_band = update_band(np_band, weights)
         circle_band = np.vstack((np_band, np_band[0, :]))
-        plt.title("iteration="+str(i))
+        plt.title("iteration=" + str(i))
         elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
         i += 1
-        plt.pause(.01)
+        plt.pause(.001)
