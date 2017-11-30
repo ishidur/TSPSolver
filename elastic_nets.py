@@ -8,6 +8,7 @@ dpi = 100
 node_radius = 0.1
 k_init = 0.2
 k_decay = 0.99
+k_bottom = 0.01
 alpha = 0.2
 beta = 2.1
 iter_lim = 401
@@ -84,7 +85,7 @@ def en_begin(band_array, city_array):
     if record:
         dir_name = make_directory()
         for i in range(iter_lim):
-            k = np.amax([0.01, k * k_decay])
+            k = np.amax([k_bottom, k * k_decay])
             weights = calc_weight_matrix(band_array, city_array, k)
             band_array = update_band(band_array, city_array, weights, k)
             circle_band = np.vstack((band_array, band_array[0, :]))
