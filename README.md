@@ -5,7 +5,7 @@ Neural Network approaches for the Traveling Salesman Problem.
 - Self-organizing map (WIP)
 
 # Enviroment
-| |version|
+|package|version|
 |:--|:--:|
 |python|3.6.3|
 |pip|9.0.1|
