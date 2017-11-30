@@ -19,9 +19,12 @@ class ENConfig:
 class SOMConfig:
     read_file = True
     file_path = Files.path
-    city_file = Files.random_30_cities
+    city_file = Files.random_10_cities
     city_num = 30
 
 
 class GifMakerConfig:
-    source_dir = './results/random_30_cities/elastic_nets/'
+    __path = './results/random_30_cities/'
+    __en_path = 'elastic_nets/'
+    __som_path = 'self_organizing_map/'
+    source_dir = __path + __som_path

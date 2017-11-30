@@ -20,4 +20,5 @@ for file_name in file_names:
     ims.append([im])
 
 ani = animation.ArtistAnimation(fig, ims)
-plt.show()
+ani.save(source_dir + 'animation.gif', writer="imagemagick")
+# plt.show()
