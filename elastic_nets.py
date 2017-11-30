@@ -12,6 +12,7 @@ alpha = 0.2
 beta = 2.1
 iter_lim = 401
 record_moment = [1, 16, 31, 51, 101, 201, 401]
+record = False
 
 
 def phi(distance, k):
@@ -28,8 +29,8 @@ def calc_dist_matrix(band_array, city_array):
     return dist_matrix
 
 
-def calc_weight_matrix(band_array, k):
-    dist_matrix = calc_dist_matrix(band_array, np_cities)
+def calc_weight_matrix(band_array, city_array, k):
+    dist_matrix = calc_dist_matrix(band_array, city_array)
     weight_matrix = phi(dist_matrix, k)
     for city_i in range(city_num):
         sum = np.sum(weight_matrix[city_i, :])
@@ -37,22 +38,22 @@ def calc_weight_matrix(band_array, k):
     return weight_matrix
 
 
-def update_node(band_array, index, weights):
+def update_node(index, band_array, city_array, weights, k):
     back_i = (index - 1) % node_num
     forward_i = (index + 1) % node_num
     attraction_force = np.zeros(2)
     for city_i in range(city_num):
         attraction_force += weights[city_i, index] * \
-            (np_cities[city_i, :] - band_array[index, :])
+            (city_array[city_i, :] - band_array[index, :])
     delta_node = alpha * attraction_force + beta * k * (
         band_array[forward_i, :] - 2 * band_array[index, :] + band_array[back_i, :])
     return delta_node
 
 
-def update_band(band_array, weights):
+def update_band(band_array, city_array, weights, k):
     new_band_array = band_array.copy()
     for i in range(node_num):
-        new_band_array[i, :] += update_node(band_array, i, weights)
+        new_band_array[i, :] += update_node(i, band_array, city_array, weights, k)
     return new_band_array
 
 
@@ -77,6 +78,35 @@ def make_directory():
     except:
         os.mkdir(directory)
     return dir_name
+
+def en_begin(band_array, city_array):
+    k = k_init
+    if record:
+        dir_name = make_directory()
+        for i in range(iter_lim):
+            k = np.amax([0.01, k * k_decay])
+            weights = calc_weight_matrix(band_array, city_array, k)
+            band_array = update_band(band_array, city_array, weights, k)
+            circle_band = np.vstack((band_array, band_array[0, :]))
+            plt.title("iteration=" + str(i))
+            elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
+            plt.pause(.001)
+            if i + 1 in record_moment:
+                filename = 'iteration-' + str(i) + '.png'
+                file_path = dir_name + filename
+                plt.savefig(file_path)
+    else:
+        i = 1
+        while plt.get_fignums():
+            k = np.amax([0.01, k * k_decay])
+            weights = calc_weight_matrix(band_array, city_array, k)
+            band_array = update_band(band_array, city_array, weights, k)
+            circle_band = np.vstack((band_array, band_array[0, :]))
+            plt.title("iteration=" + str(i))
+            elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
+            i += 1
+            plt.pause(.001)
+
 
 if __name__ == "__main__":
     if (Config.read_file):
@@ -107,20 +137,4 @@ if __name__ == "__main__":
     plt.title("iteration=" + str(0))
     plt.grid()
     plt.pause(.001)
-    k = k_init
-    # i = 1
-    dir_name = make_directory()
-    for i in range(iter_lim):
-        # while plt.get_fignums():
-        k = np.amax([0.01, k * k_decay])
-        weights = calc_weight_matrix(np_band, k)
-        np_band = update_band(np_band, weights)
-        circle_band = np.vstack((np_band, np_band[0, :]))
-        plt.title("iteration=" + str(i))
-        elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
-        # i += 1
-        plt.pause(.001)
-        if i + 1 in record_moment:
-            filename = 'iteration-' + str(i) + '.png'
-            file_path = dir_name + filename
-            plt.savefig(file_path)
+    en_begin(np_band, np_cities)
