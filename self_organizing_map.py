@@ -17,7 +17,7 @@ alpha = 0.03
 mu = 0.6
 iter_lim = 501
 record_moment = [1, 16, 31, 51, 101, 201, 301, 401, 501]
-record = True
+record = False
 
 
 # def g_func(djj_star, l, beta):
@@ -126,17 +126,21 @@ if __name__ == "__main__":
         np_cities[:, 0] /= width
         np_cities[:, 1] -= np.min(np_cities[:, 1])
         np_cities[:, 1] /= width
+        center_x = np.average(np_cities[:, 0])
+        center_y = np.average(np_cities[:, 1])
         figsize = (window_size, window_size)
     else:
         city_num = Config.city_num
         # “continuous uniform” distribution random
         np_cities = np.random.random((city_num, 2))
         figsize = (window_size, window_size)
+        center_x = 0.5
+        center_y = 0.5
 
     node_num = int(city_num * 2)
     angles = np.linspace(0, 2 * np.pi, node_num)
     np_band = np.array(
-        [node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
+        [node_radius * np.sin(angles) + center_x, node_radius * np.cos(angles) + center_y]).transpose()
     fig = plt.figure(figsize=figsize, dpi=dpi)
     plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
     elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])

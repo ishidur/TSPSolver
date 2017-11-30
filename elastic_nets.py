@@ -54,7 +54,8 @@ def update_node(index, band_array, city_array, weights, k):
 def update_band(band_array, city_array, weights, k):
     new_band_array = band_array.copy()
     for i in range(node_num):
-        new_band_array[i, :] += update_node(i, band_array, city_array, weights, k)
+        new_band_array[
+            i, :] += update_node(i, band_array, city_array, weights, k)
     return new_band_array
 
 
@@ -79,6 +80,7 @@ def make_directory():
     except:
         os.mkdir(directory)
     return dir_name
+
 
 def en_begin(band_array, city_array):
     k = k_init
@@ -121,17 +123,21 @@ if __name__ == "__main__":
         np_cities[:, 0] /= width
         np_cities[:, 1] -= np.min(np_cities[:, 1])
         np_cities[:, 1] /= width
+        center_x = np.average(np_cities[:, 0])
+        center_y = np.average(np_cities[:, 1])
         figsize = (window_size, window_size)
     else:
         city_num = Config.city_num
         # “continuous uniform” distribution random
         np_cities = np.random.random((city_num, 2))
+        center_x = 0.5
+        center_y = 0.5
         figsize = (window_size, window_size)
 
     node_num = int(city_num * 2.5 + 0.5)
     angles = np.linspace(0, 2 * np.pi, node_num)
     np_band = np.array(
-        [node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
+        [node_radius * np.sin(angles) + center_x, node_radius * np.cos(angles) + center_y]).transpose()
     fig = plt.figure(figsize=figsize, dpi=dpi)
     plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
     elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
