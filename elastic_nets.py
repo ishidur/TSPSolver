@@ -19,8 +19,8 @@ def phi(distance, k):
     return np.exp(-distance ** 2 / (2 * k) ** 2)
 
 
-def dist(x, y):
-    return np.linalg.norm(x - y)
+def dist(p1, p2):
+    return np.linalg.norm(p1 - p2)
 
 
 def calc_dist_matrix(band_array, city_array):
