@@ -1,8 +1,16 @@
 # TSPSolver
 Neural Network approaches for the Traveling Salesman Problem.
+- Hopfield Network (Future)
 - Elastic Nets
-- Self-organizing map
+- Self-organizing map (WIP)
 
-# License
+# Enviroment
+| |version|
+|:--|:--:|
+|python|3.6.3|
+|pip|9.0.1|
 
-MIT
+In the project directory, run the following command:  
+```
+pip install -r requirements.txt
+```
