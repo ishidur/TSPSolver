@@ -11,8 +11,8 @@ k_decay = 0.99
 k_bottom = 0.01
 alpha = 0.2
 beta = 2.1
-iter_lim = 501
-record_moment = [1, 16, 31, 51, 101, 201, 301, 401, 501]
+iter_lim = 500
+record_moment = np.arange(0, iter_lim, 10)
 record = True
 
 
@@ -54,7 +54,8 @@ def update_node(index, band_array, city_array, weights, k):
 def update_band(band_array, city_array, weights, k):
     new_band_array = band_array.copy()
     for i in range(node_num):
-        new_band_array[i, :] += update_node(i, band_array, city_array, weights, k)
+        new_band_array[
+            i, :] += update_node(i, band_array, city_array, weights, k)
     return new_band_array
 
 
@@ -80,12 +81,13 @@ def make_directory():
         os.mkdir(directory)
     return dir_name
 
+
 def en_begin(band_array, city_array):
     k = k_init
     if record:
         dir_name = make_directory()
         for i in range(iter_lim):
-            if i + 1 in record_moment:
+            if i in record_moment:
                 filename = 'iteration-' + str(i) + '.png'
                 file_path = dir_name + filename
                 plt.savefig(file_path)
@@ -93,7 +95,7 @@ def en_begin(band_array, city_array):
             weights = calc_weight_matrix(band_array, city_array, k)
             band_array = update_band(band_array, city_array, weights, k)
             circle_band = np.vstack((band_array, band_array[0, :]))
-            plt.title("iteration=" + str(i))
+            plt.title("iteration=" + str(i + 1))
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
             plt.pause(.001)
     else:
@@ -121,17 +123,21 @@ if __name__ == "__main__":
         np_cities[:, 0] /= width
         np_cities[:, 1] -= np.min(np_cities[:, 1])
         np_cities[:, 1] /= width
+        center_x = np.average(np_cities[:, 0])
+        center_y = np.average(np_cities[:, 1])
         figsize = (window_size, window_size)
     else:
         city_num = Config.city_num
         # “continuous uniform” distribution random
         np_cities = np.random.random((city_num, 2))
+        center_x = 0.5
+        center_y = 0.5
         figsize = (window_size, window_size)
 
     node_num = int(city_num * 2.5 + 0.5)
     angles = np.linspace(0, 2 * np.pi, node_num)
     np_band = np.array(
-        [node_radius * np.sin(angles) + 0.5, node_radius * np.cos(angles) + 0.5]).transpose()
+        [node_radius * np.sin(angles) + center_x, node_radius * np.cos(angles) + center_y]).transpose()
     fig = plt.figure(figsize=figsize, dpi=dpi)
     plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
     elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
