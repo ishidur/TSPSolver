@@ -17,4 +17,15 @@ Neural Network approaches for the Traveling Salesman Problem.
 In the project directory, run the following command:  
 ```
 pip install -r requirements.txt
+```  
+  
+If you want to save result as gif, imagemagick is required.  
+## Install with homebrew  
+Run the following command: 
 ```
+brew install imagemagick
+```
+## Install from source and binary distributions    
+Check this out  
+[source](https://www.imagemagick.org/script/install-source.php)  
+[binary distributions](https://www.imagemagick.org/script/download.php)
