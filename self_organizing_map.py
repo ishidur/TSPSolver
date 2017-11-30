@@ -6,18 +6,29 @@ import os
 window_size = 5
 dpi = 100
 node_radius = 0.1
+# b_init = 10
+# b_growth = 1.005
+# b_ceil = 1000
+
 b_init = 10
-b_growth = 1.005
-b_ceil = 1000
-mu = 1.0
+alpha = 0.03
+# b_ceil = 1000
+# mu = 1.0
+mu = 0.6
 iter_lim = 501
 record_moment = [1, 16, 31, 51, 101, 201, 301, 401, 501]
 record = True
 
 
-def g_func(djj_star, l, beta):
+# def g_func(djj_star, l, beta):
+#     if djj_star < l:
+#         return (1 - djj_star / l)**beta
+#     return 0.0
+
+
+def g_func(djj_star, l, g):
     if djj_star < l:
-        return (1 - djj_star / l)**beta
+        return np.exp(-djj_star**2 / g**2)
     return 0.0
 
 
@@ -33,7 +44,7 @@ def calc_champ_node(band_array, city):
 
 
 def update_node(node, city, djj_star, beta):
-    delta_node = mu * g_func(djj_star, node_num / 2, beta) * (city - node)
+    delta_node = mu * g_func(djj_star, node_num * 0.2, beta) * (city - node)
     return delta_node
 
 
@@ -80,24 +91,26 @@ def som_begin(band_array, city_array):
                 file_path = dir_name + filename
                 plt.savefig(file_path)
             picked_city = city_array[i % city_num, :]
-            beta = np.amin([b_ceil, beta * b_growth])
             j_star = calc_champ_node(band_array, picked_city)
             band_array = update_band(band_array, picked_city, j_star, beta)
             circle_band = np.vstack((band_array, band_array[0, :]))
             plt.title("iteration=" + str(i))
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
+            # beta = np.amin([b_ceil, beta * b_growth])
+            beta = (1-alpha)*beta
             plt.pause(.001)
     else:
         i = 1
         while plt.get_fignums():
             picked_city = city_array[i % city_num, :]
-            beta = np.amin([b_ceil, beta * b_growth])
             j_star = calc_champ_node(band_array, picked_city)
             band_array = update_band(band_array, picked_city, j_star, beta)
             circle_band = np.vstack((band_array, band_array[0, :]))
             plt.title("iteration=" + str(i))
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
             i += 1
+            # beta = np.amin([b_ceil, beta * b_growth])
+            beta = (1-alpha)*beta
             plt.pause(.001)
 
 
