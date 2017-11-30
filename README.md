@@ -2,9 +2,9 @@
 Neural Network approaches for the Traveling Salesman Problem.
 - Hopfield Network (Future)  
 - Elastic Nets  
-![Elastic nets](https://github.com/ishidur/TSPSolver/blob/develop/results/random_10_cities/elastic_nets/animation.gif)
+![Elastic nets](https://github.com/ishidur/TSPSolver/blob/develop/results/djibouti/elastic_nets/animation.gif)
 - Self-organizing map  
-![Self-organizing map](https://github.com/ishidur/TSPSolver/blob/develop/results/random_10_cities/self_organizing_map/animation.gif)
+![Self-organizing map](https://github.com/ishidur/TSPSolver/blob/develop/results/djibouti/self_organizing_map/animation.gif)
 
 # Enviroment
 |package|version|
