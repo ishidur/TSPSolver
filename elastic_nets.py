@@ -11,6 +11,7 @@ k_decay = 0.99
 alpha = 0.2
 beta = 2.1
 iter_lim = 401
+record_moment = [1, 16, 31, 51, 101, 201, 401]
 
 
 def phi(distance, k):
@@ -55,6 +56,28 @@ def update_band(band_array, weights):
     return new_band_array
 
 
+def make_directory():
+    dir_name = './results/'
+    directory = os.path.dirname(dir_name)
+    try:
+        os.stat(directory)
+    except:
+        os.mkdir(directory)
+    dir_name += Config.city_file.replace(
+        '.csv', '') + '/'
+    directory = os.path.dirname(dir_name)
+    try:
+        os.stat(directory)
+    except:
+        os.mkdir(directory)
+    dir_name += 'elastic_nets/'
+    directory = os.path.dirname(dir_name)
+    try:
+        os.stat(directory)
+    except:
+        os.mkdir(directory)
+    return dir_name
+
 if __name__ == "__main__":
     if (Config.read_file):
         np_cities = np.genfromtxt(
@@ -83,24 +106,21 @@ if __name__ == "__main__":
     elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
     plt.title("iteration=" + str(0))
     plt.grid()
+    plt.pause(.001)
     k = k_init
-    i = 1
-    # for i in range(iter_lim):
-    while plt.get_fignums():
+    # i = 1
+    dir_name = make_directory()
+    for i in range(iter_lim):
+        # while plt.get_fignums():
         k = np.amax([0.01, k * k_decay])
         weights = calc_weight_matrix(np_band, k)
         np_band = update_band(np_band, weights)
         circle_band = np.vstack((np_band, np_band[0, :]))
         plt.title("iteration=" + str(i))
         elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
-        i += 1
+        # i += 1
         plt.pause(.001)
-    # filename = 'iteration-' + str(iter_lim - 1) + '.png'
-    # file_path = './results/' + Config.city_file.replace(
-    #     '.csv', '') + '/' + filename
-    # directory = os.path.dirname(file_path)
-    # try:
-    #     os.stat(directory)
-    # except:
-    #     os.mkdir(directory)
-    # plt.savefig(file_path)
+        if i + 1 in record_moment:
+            filename = 'iteration-' + str(i) + '.png'
+            file_path = dir_name + filename
+            plt.savefig(file_path)

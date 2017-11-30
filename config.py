@@ -12,7 +12,7 @@ class Files:
 class ENConfig:
     read_file = True
     file_path = Files.path
-    city_file = Files.random_30_cities
+    city_file = Files.random_10_cities
     city_num = 30
 
 
@@ -21,3 +21,7 @@ class SOMConfig:
     file_path = Files.path
     city_file = Files.random_10_cities
     city_num = 30
+
+
+class GifMakerConfig:
+    source_dir = './results/random_30_cities/elastic_nets/'
