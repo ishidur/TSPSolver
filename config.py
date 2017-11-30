@@ -24,7 +24,7 @@ class SOMConfig:
 
 
 class GifMakerConfig:
-    __path = './results/random_30_cities/'
+    __path = './results/random_10_cities/'
     __en_path = 'elastic_nets/'
     __som_path = 'self_organizing_map/'
-    source_dir = __path + __som_path
+    source_dir = __path + __en_path
