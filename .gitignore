@@ -2,6 +2,7 @@
 
 #added
 .idea/
+.DS_Store
 
 ### Python template
 # Byte-compiled / optimized / DLL files
@@ -86,7 +87,6 @@ celerybeat-schedule
 
 # SageMath parsed files
 *.sage.py
-
 # Environments
 .env
 .venv

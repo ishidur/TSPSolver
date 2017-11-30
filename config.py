@@ -12,14 +12,14 @@ class Files:
 class ENConfig:
     read_file = True
     file_path = Files.path
-    city_file = Files.random_10_cities
+    city_file = Files.random_30_cities
     city_num = 30
 
 
 class SOMConfig:
-    read_file = False
+    read_file = True
     file_path = Files.path
-    city_file = Files.random_10_cities
+    city_file = Files.random_30_cities
     city_num = 30
 
 
