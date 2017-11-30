@@ -7,12 +7,12 @@ window_size = 5
 dpi = 100
 node_radius = 0.1
 b_init = 10
-b_growth = 1.01
+b_growth = 1.005
 b_ceil = 1000
 mu = 1.0
-iter_lim = 401
-record_moment = [1, 16, 31, 51, 101, 201, 401]
-record = False
+iter_lim = 501
+record_moment = [1, 16, 31, 51, 101, 201, 301, 401, 501]
+record = True
 
 
 def g_func(djj_star, l, beta):
@@ -75,6 +75,10 @@ def som_begin(band_array, city_array):
     if record:
         dir_name = make_directory()
         for i in range(iter_lim):
+            if i + 1 in record_moment:
+                filename = 'iteration-' + str(i) + '.png'
+                file_path = dir_name + filename
+                plt.savefig(file_path)
             picked_city = city_array[i % city_num, :]
             beta = np.amin([b_ceil, beta * b_growth])
             j_star = calc_champ_node(band_array, picked_city)
@@ -83,10 +87,6 @@ def som_begin(band_array, city_array):
             plt.title("iteration=" + str(i))
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
             plt.pause(.001)
-            if i + 1 in record_moment:
-                filename = 'iteration-' + str(i) + '.png'
-                file_path = dir_name + filename
-                plt.savefig(file_path)
     else:
         i = 1
         while plt.get_fignums():

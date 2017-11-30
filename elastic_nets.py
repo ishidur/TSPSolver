@@ -11,9 +11,9 @@ k_decay = 0.99
 k_bottom = 0.01
 alpha = 0.2
 beta = 2.1
-iter_lim = 401
-record_moment = [1, 16, 31, 51, 101, 201, 401]
-record = False
+iter_lim = 501
+record_moment = [1, 16, 31, 51, 101, 201, 301, 401, 501]
+record = True
 
 
 def phi(distance, k):
@@ -85,6 +85,10 @@ def en_begin(band_array, city_array):
     if record:
         dir_name = make_directory()
         for i in range(iter_lim):
+            if i + 1 in record_moment:
+                filename = 'iteration-' + str(i) + '.png'
+                file_path = dir_name + filename
+                plt.savefig(file_path)
             k = np.amax([k_bottom, k * k_decay])
             weights = calc_weight_matrix(band_array, city_array, k)
             band_array = update_band(band_array, city_array, weights, k)
@@ -92,10 +96,6 @@ def en_begin(band_array, city_array):
             plt.title("iteration=" + str(i))
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
             plt.pause(.001)
-            if i + 1 in record_moment:
-                filename = 'iteration-' + str(i) + '.png'
-                file_path = dir_name + filename
-                plt.savefig(file_path)
     else:
         i = 1
         while plt.get_fignums():
