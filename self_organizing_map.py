@@ -97,7 +97,7 @@ def som_begin(band_array, city_array):
             plt.title("iteration=" + str(i))
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
             # beta = np.amin([b_ceil, beta * b_growth])
-            beta = (1-alpha)*beta
+            beta = (1 - alpha) * beta
             plt.pause(.001)
     else:
         i = 1
@@ -110,7 +110,7 @@ def som_begin(band_array, city_array):
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
             i += 1
             # beta = np.amin([b_ceil, beta * b_growth])
-            beta = (1-alpha)*beta
+            beta = (1 - alpha) * beta
             plt.pause(.001)
 
 
