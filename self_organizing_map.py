@@ -28,7 +28,7 @@ record = True
 
 def g_func(djj_star, l, g):
     if djj_star < l:
-        return np.exp(-djj_star**2 / g**2)
+        return np.exp(-djj_star ** 2 / g ** 2)
     return 0.0
 
 
@@ -53,7 +53,7 @@ def update_band(band_array, city, j_star, beta):
     for j in range(node_num):
         djj_star = np.amin([np.abs(j - j_star), node_num - np.abs(j - j_star)])
         new_band_array[
-            j, :] += update_node(band_array[j, :], city, djj_star, beta)
+        j, :] += update_node(band_array[j, :], city, djj_star, beta)
     return new_band_array
 
 

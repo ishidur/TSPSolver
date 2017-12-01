@@ -45,7 +45,7 @@ def update_node(index, band_array, city_array, weights, k):
     attraction_force = np.zeros(2)
     for city_i in range(city_num):
         attraction_force += weights[city_i, index] * \
-            (city_array[city_i, :] - band_array[index, :])
+                            (city_array[city_i, :] - band_array[index, :])
     delta_node = alpha * attraction_force + beta * k * (
         band_array[forward_i, :] - 2 * band_array[index, :] + band_array[back_i, :])
     return delta_node
@@ -55,7 +55,7 @@ def update_band(band_array, city_array, weights, k):
     new_band_array = band_array.copy()
     for i in range(node_num):
         new_band_array[
-            i, :] += update_node(i, band_array, city_array, weights, k)
+        i, :] += update_node(i, band_array, city_array, weights, k)
     return new_band_array
 
 

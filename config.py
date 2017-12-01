@@ -25,7 +25,7 @@ class SOMConfig:
 
 class GifMakerConfig:
     __path = './results/'
-    __problem_set = 'djibouti/'
+    __problem_set = 'random_30_cities/'
     __en_path = 'elastic_nets/'
     __som_path = 'self_organizing_map/'
-    source_dir = __path + __problem_set + __som_path
+    source_dir = __path + __problem_set + __en_path
