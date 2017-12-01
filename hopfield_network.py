@@ -2,6 +2,7 @@ from config import HNConfig as Config
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import cm
+from matplotlib import colors
 import os
 
 window_size = 5
@@ -79,7 +80,7 @@ def make_directory():
         os.stat(directory)
     except:
         os.mkdir(directory)
-    dir_name += 'elastic_nets/'
+    dir_name += 'hopfield_net/'
     directory = os.path.dirname(dir_name)
     try:
         os.stat(directory)
@@ -146,7 +147,8 @@ if __name__ == "__main__":
     weights = calc_weight_matrix(np_cities)
     biases = calc_bias(np_cities)
     fig = plt.figure(figsize=figsize, dpi=dpi)
-    mat_visual = plt.matshow(np.reshape(nodes, (city_num, city_num)), fignum=0, cmap=cm.gist_gray)
+    mat_visual = plt.matshow(np.reshape(nodes, (city_num, city_num)), fignum=0, cmap=cm.Greys, norm=colors.Normalize(vmin=0., vmax=1.))
+    fig.colorbar(mat_visual)
     plt.title("iteration=" + str(0))
     plt.pause(.0001)
     en_begin(inner_vals, nodes, weights, biases)
