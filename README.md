@@ -1,6 +1,6 @@
 # TSPSolver
 Neural Network approaches for the Traveling Salesman Problem.
-- Hopfield Network (Future)  
+- Hopfield Network (WIP)  
 - Elastic Nets  
 ![Elastic nets](https://github.com/ishidur/TSPSolver/blob/develop/results/djibouti/elastic_nets/animation.gif)
 - Self-organizing map  
