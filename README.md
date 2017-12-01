@@ -13,7 +13,7 @@ Neural Network approaches for the Traveling Salesman Problem.
 |pip|9.0.1|
 |matplotlib|2.1.0|
 |numpy|1.13.3|
-|imagemagick (optional)|7.0.7.6|
+|imagemagick (optional)|7.0.7|
   
 ## Install with [pip](https://pip.pypa.io/en/stable/)  
 In the project directory, run the following command:  
