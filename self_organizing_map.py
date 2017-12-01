@@ -17,7 +17,7 @@ alpha = 0.03
 mu = 0.6
 iter_lim = 200
 record_moment = np.arange(0, iter_lim, 10)
-record = True
+record = False
 
 
 # def g_func(djj_star, l, beta):
