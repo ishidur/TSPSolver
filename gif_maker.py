@@ -33,5 +33,5 @@ if __name__ == "__main__":
         ims.append([im])
 
     ani = animation.ArtistAnimation(fig, ims)
-    ani.save(source_dir + 'animation.gif', writer='imagemagick')
-    # plt.show()
+    # ani.save(source_dir + 'animation.gif', writer='imagemagick')
+    plt.show()

@@ -25,8 +25,7 @@ def dist(p1, p2):
 
 
 def calc_dist_matrix(band_array, city_array):
-    dist_matrix = np.array([[dist(node, city)
-                             for node in band_array] for city in city_array])
+    dist_matrix = np.array([[dist(node, city) for node in band_array] for city in city_array])
     return dist_matrix
 
 
@@ -54,11 +53,10 @@ def update_node(index, band_array, city_array, weights, k):
 def update_band(band_array, city_array, weights, k):
     new_band_array = band_array.copy()
     for i in range(node_num):
-        new_band_array[
-        i, :] += update_node(i, band_array, city_array, weights, k)
+        new_band_array[i, :] += update_node(i, band_array, city_array, weights, k)
     return new_band_array
 
-
+# TODO bad code
 def make_directory():
     dir_name = './results/'
     directory = os.path.dirname(dir_name)
