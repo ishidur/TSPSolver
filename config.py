@@ -23,6 +23,13 @@ class SOMConfig:
     city_num = 30
 
 
+class HNConfig:
+    read_file = True
+    file_path = Files.path
+    city_file = Files.random_10_cities
+    city_num = 30
+
+
 class GifMakerConfig:
     __path = './results/'
     __problem_set = 'random_30_cities/'
