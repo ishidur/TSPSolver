@@ -10,10 +10,10 @@ k_init = 0.2
 k_decay = 0.99
 k_bottom = 0.01
 alpha = 0.2
-beta = 2.1
+beta = 2.0
 iter_lim = 500
 record_moment = np.arange(0, iter_lim, 10)
-record = True
+record = False
 
 
 def phi(distance, k):

@@ -10,10 +10,10 @@ class Files:
 
 # config
 class ENConfig:
-    read_file = True
+    read_file = False
     file_path = Files.path
     city_file = Files.djibouti
-    city_num = 30
+    city_num = 100
 
 
 class SOMConfig:

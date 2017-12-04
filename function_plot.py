@@ -11,10 +11,10 @@ def plot_en():
     x_min, x_max = 0.0, 1.0
     k = 0.2
     figsize = (window_size, window_size)
-    X = np.linspace(x_min, x_max, 1000)
-    Y = en.phi(X, k)
+    x = np.linspace(x_min, x_max, 1000)
+    y = en.phi(x, k)
     fig = plt.figure(figsize=figsize, dpi=dpi)
-    plt.plot(X, Y)
+    plt.plot(x, y)
     plt.xlabel('distance')
     plt.grid()
     plt.show()
@@ -35,5 +35,5 @@ def plot_som():
 
 
 if __name__ == "__main__":
-    plot_en()
-    # plot_som()
+    # plot_en()
+    plot_som()
