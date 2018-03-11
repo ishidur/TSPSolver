@@ -1,6 +1,6 @@
 import numpy as np
 
-city_num = 15
+city_num = 20
 file_path = './coordinates/'
 output_file = 'random_' + str(city_num) + '_cities.csv'
 

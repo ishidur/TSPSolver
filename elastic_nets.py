@@ -10,7 +10,7 @@ k_init = 0.2
 k_decay = 0.99
 k_bottom = 0.01
 alpha = 0.2
-beta = 2.1
+beta = 2.0
 iter_lim = 500
 record_moment = np.arange(0, iter_lim, 10)
 record = True
@@ -25,8 +25,7 @@ def dist(p1, p2):
 
 
 def calc_dist_matrix(band_array, city_array):
-    dist_matrix = np.array([[dist(node, city)
-                             for node in band_array] for city in city_array])
+    dist_matrix = np.array([[dist(node, city) for node in band_array] for city in city_array])
     return dist_matrix
 
 
@@ -47,38 +46,22 @@ def update_node(index, band_array, city_array, weights, k):
         attraction_force += weights[city_i, index] * \
                             (city_array[city_i, :] - band_array[index, :])
     delta_node = alpha * attraction_force + beta * k * (
-        band_array[forward_i, :] - 2 * band_array[index, :] + band_array[back_i, :])
+            band_array[forward_i, :] - 2 * band_array[index, :] + band_array[back_i, :])
     return delta_node
 
 
 def update_band(band_array, city_array, weights, k):
     new_band_array = band_array.copy()
     for i in range(node_num):
-        new_band_array[
-        i, :] += update_node(i, band_array, city_array, weights, k)
+        new_band_array[i, :] += update_node(i, band_array, city_array, weights, k)
     return new_band_array
 
 
 def make_directory():
-    dir_name = './results/'
+    dir_name = './results/' + Config.city_file.replace(
+        '.csv', '') + '/elastic_nets/'
     directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
-    dir_name += Config.city_file.replace(
-        '.csv', '') + '/'
-    directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
-    dir_name += 'elastic_nets/'
-    directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
+    os.makedirs(directory, exist_ok=True)
     return dir_name
 
 

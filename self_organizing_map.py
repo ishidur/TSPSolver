@@ -57,26 +57,12 @@ def update_band(band_array, city, j_star, beta):
     return new_band_array
 
 
+
 def make_directory():
-    dir_name = './results/'
+    dir_name = './results/' + Config.city_file.replace(
+        '.csv', '') + '/self_organizing_map/'
     directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
-    dir_name += Config.city_file.replace(
-        '.csv', '') + '/'
-    directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
-    dir_name += 'self_organizing_map/'
-    directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
+    os.makedirs(directory, exist_ok=True)
     return dir_name
 
 
