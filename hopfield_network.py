@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 from matplotlib import colors
 import os
+import pandas as pd
 
 window_size = 5
 dpi = 100
@@ -48,6 +49,8 @@ def calc_weight_matrix(city_array):
             tmp[s0, s1] = -param_a * kronecker_delta(x, y) * (1.0 - kronecker_delta(i, j)) - param_b * kronecker_delta(
                 i, j) * (1.0 - kronecker_delta(x, y)) - param_c - param_d * dxy * (
                                   kronecker_delta(j, (i - 1) % city_num) + kronecker_delta(j, (i + 1) % city_num))
+    df = pd.DataFrame(tmp)
+    df.to_csv("weigths.csv")
     return tmp
 
 
@@ -89,7 +92,7 @@ def make_directory():
     return dir_name
 
 
-def en_begin(inner_vals_array, nodes_array, weights_matrix, biases_array):
+def hp_begin(inner_vals_array, nodes_array, weights_matrix, biases_array):
     if record:
         dir_name = make_directory()
         for i in range(iter_lim):
@@ -151,4 +154,4 @@ if __name__ == "__main__":
     fig.colorbar(mat_visual)
     plt.title("iteration=" + str(0))
     plt.pause(.0001)
-    en_begin(inner_vals, nodes, weights, biases)
+    hp_begin(inner_vals, nodes, weights, biases)
