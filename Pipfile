@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "==19.3b0"
+
+[packages]
+certifi = "==2017.11.5"
+matplotlib = "==2.1.0"
+numpy = "==1.13.3"
+pyparsing = "==2.2.0"
+python-dateutil = "==2.6.1"
+pytz = "==2017.3"
+six = "==1.11.0"
+tornado = "==4.5.2"
+Cycler = "==0.10.0"
+
+[requires]
+python_version = "3.7"
