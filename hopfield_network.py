@@ -8,23 +8,24 @@ import pandas as pd
 
 window_size = 5
 dpi = 100
-iter_lim = 5000
+iter_lim = 10000
 record_moment = np.arange(0, iter_lim, 10)
 record = False
-delta_t = 0.01
-noise = 0.001
+delta_t = 0.001
+noise = 0.01
 u_0 = 0.02
-param_a = 1.0
-param_b = 1.0
-param_c = 2.0
-param_d = 1.0
+param_a = 500.0
+param_b = 500.0
+param_c = 200.0
+param_d = 500.0
 
 
 def sigmoid(inputs):
-    return 1.0 / (np.ones(inputs.shape) + np.exp(-inputs / u_0))
+    return 1.0 / (1.0 + np.exp(-inputs / u_0))
 
 
 def dist(p1, p2):
+    # print(p1, p2, np.linalg.norm(p1 - p2))
     return np.linalg.norm(p1 - p2)
 
 
@@ -38,7 +39,6 @@ def calc_weight_matrix(city_array):
     city_num = city_array.shape[0]
     n = city_num ** 2
     tmp = np.zeros((n, n))
-
     for s0 in range(n):
         x = int(s0 / city_num)
         i = s0 % city_num
@@ -71,7 +71,7 @@ def calc_bias(city_array):
 
 def update_inner_vals(nodes_array, inner_vals, weight_matrix, biases):
     tau = 1.0
-    asdf = np.dot(weight_matrix, nodes_array)
+    asdf = np.matmul(weight_matrix, nodes_array)
     delta = (-inner_vals / tau + asdf + biases) * delta_t
     return inner_vals + delta
 
@@ -124,6 +124,7 @@ def hp_begin(inner_vals_array, nodes_array, weights_matrix, biases_array):
         # i += 1
         # plt.pause(.01)
         while plt.get_fignums():
+            # print(nodes_array.shape, inner_vals_array.shape, weights_matrix.shape, biases_array.shape)
             inner_vals_array = update_inner_vals(
                 nodes_array, inner_vals_array, weights_matrix, biases_array
             )
@@ -155,10 +156,10 @@ if __name__ == "__main__":
         center_x = 0.5
         center_y = 0.5
         figsize = (window_size, window_size)
-    inner_vals = (np.random.random((city_num ** 2)) - 0.5) * noise
-    nodes = sigmoid(inner_vals)
-    weights = calc_weight_matrix(np_cities)
-    biases = calc_bias(np_cities)
+    inner_vals = np.matrix((np.random.random((city_num ** 2)) - 0.5) * noise).T
+    nodes = np.matrix(sigmoid(inner_vals))
+    weights = np.matrix(calc_weight_matrix(np_cities))
+    biases = np.matrix(calc_bias(np_cities)).T
     fig = plt.figure(figsize=figsize, dpi=dpi)
     mat_visual = plt.matshow(
         np.reshape(nodes, (city_num, city_num)),
