@@ -46,9 +46,17 @@ def calc_weight_matrix(city_array):
             y = int(s1 / city_num)
             j = s1 % city_num
             dxy = dist(city_array[x, :], city_array[y, :])
-            tmp[s0, s1] = -param_a * kronecker_delta(x, y) * (1.0 - kronecker_delta(i, j)) - param_b * kronecker_delta(
-                i, j) * (1.0 - kronecker_delta(x, y)) - param_c - param_d * dxy * (
-                                  kronecker_delta(j, (i - 1) % city_num) + kronecker_delta(j, (i + 1) % city_num))
+            tmp[s0, s1] = (
+                -param_a * kronecker_delta(x, y) * (1.0 - kronecker_delta(i, j))
+                - param_b * kronecker_delta(i, j) * (1.0 - kronecker_delta(x, y))
+                - param_c
+                - param_d
+                * dxy
+                * (
+                    kronecker_delta(j, (i - 1) % city_num)
+                    + kronecker_delta(j, (i + 1) % city_num)
+                )
+            )
     df = pd.DataFrame(tmp)
     df.to_csv("weigths.csv")
     return tmp
@@ -70,20 +78,19 @@ def update_inner_vals(nodes_array, inner_vals, weight_matrix, biases):
 
 # TODO bad code
 def make_directory():
-    dir_name = './results/'
+    dir_name = "./results/"
     directory = os.path.dirname(dir_name)
     try:
         os.stat(directory)
     except:
         os.mkdir(directory)
-    dir_name += Config.city_file.replace(
-        '.csv', '') + '/'
+    dir_name += Config.city_file.replace(".csv", "") + "/"
     directory = os.path.dirname(dir_name)
     try:
         os.stat(directory)
     except:
         os.mkdir(directory)
-    dir_name += 'hopfield_net/'
+    dir_name += "hopfield_net/"
     directory = os.path.dirname(dir_name)
     try:
         os.stat(directory)
@@ -97,14 +104,16 @@ def hp_begin(inner_vals_array, nodes_array, weights_matrix, biases_array):
         dir_name = make_directory()
         for i in range(iter_lim):
             if i in record_moment:
-                filename = 'iteration-' + str(i) + '.png'
+                filename = "iteration-" + str(i) + ".png"
                 file_path = dir_name + filename
                 plt.savefig(file_path)
-            inner_vals_array = update_inner_vals(nodes_array, inner_vals_array, weights_matrix, biases_array)
+            inner_vals_array = update_inner_vals(
+                nodes_array, inner_vals_array, weights_matrix, biases_array
+            )
             nodes_array = sigmoid(inner_vals_array)
             plt.title("iteration=" + str(i + 1))
             mat_visual.set_data(np.reshape(nodes_array, (city_num, city_num)))
-            plt.pause(.0001)
+            plt.pause(0.0001)
     else:
         i = 1
         # while plt.get_fignums():
@@ -115,18 +124,19 @@ def hp_begin(inner_vals_array, nodes_array, weights_matrix, biases_array):
         # i += 1
         # plt.pause(.01)
         while plt.get_fignums():
-            inner_vals_array = update_inner_vals(nodes_array, inner_vals_array, weights_matrix, biases_array)
+            inner_vals_array = update_inner_vals(
+                nodes_array, inner_vals_array, weights_matrix, biases_array
+            )
             nodes_array = sigmoid(inner_vals_array)
             plt.title("iteration=" + str(i))
             mat_visual.set_data(np.reshape(nodes_array, (city_num, city_num)))
             i += 1
-            plt.pause(.0001)
+            plt.pause(0.0001)
 
 
 if __name__ == "__main__":
-    if (Config.read_file):
-        np_cities = np.genfromtxt(
-            Config.file_path + Config.city_file, delimiter=',')
+    if Config.read_file:
+        np_cities = np.genfromtxt(Config.file_path + Config.city_file, delimiter=",")
         city_num = np_cities.shape[0]
         # width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
         # width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
@@ -150,8 +160,13 @@ if __name__ == "__main__":
     weights = calc_weight_matrix(np_cities)
     biases = calc_bias(np_cities)
     fig = plt.figure(figsize=figsize, dpi=dpi)
-    mat_visual = plt.matshow(np.reshape(nodes, (city_num, city_num)), fignum=0, cmap=cm.Greys, norm=colors.Normalize(vmin=0., vmax=1.))
+    mat_visual = plt.matshow(
+        np.reshape(nodes, (city_num, city_num)),
+        fignum=0,
+        cmap=cm.Greys,
+        norm=colors.Normalize(vmin=0.0, vmax=1.0),
+    )
     fig.colorbar(mat_visual)
     plt.title("iteration=" + str(0))
-    plt.pause(.0001)
+    plt.pause(0.0001)
     hp_begin(inner_vals, nodes, weights, biases)
