@@ -20,8 +20,14 @@ param_c = 200.0
 param_d = 500.0
 
 
-def sigmoid(inputs):
-    return 1.0 / (1.0 + np.exp(-inputs / u_0))
+@np.vectorize
+def sigmoid(input):
+    sigmoid_range = 34.538776394910684
+    if input <= -sigmoid_range:
+        return 1e-15
+    if input >= sigmoid_range:
+        return 1.0 - 1e-15
+    return 1.0 / (1.0 + np.exp(-input / u_0))
 
 
 def dist(p1, p2):
