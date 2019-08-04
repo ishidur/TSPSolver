@@ -1,7 +1,7 @@
 from config import SOMConfig as Config
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+import util
 
 window_size = 5
 dpi = 100
@@ -55,20 +55,11 @@ def update_band(band_array, city, j_star, beta):
     return new_band_array
 
 
-def make_directory():
-    dir_name = (
-        "./results/" + Config.city_file.replace(".csv", "") + "/self_organizing_map/"
-    )
-    directory = os.path.dirname(dir_name)
-    os.makedirs(directory, exist_ok=True)
-    return dir_name
-
-
 def som_begin(band_array, city_array):
     beta = b_init
     np.random.shuffle(city_array)
     if record:
-        dir_name = make_directory()
+        dir_name = util.make_directory(Config)
         for i in range(iter_lim):
             if i in record_moment:
                 filename = "iteration-" + str(i) + ".png"

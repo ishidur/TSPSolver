@@ -11,6 +11,7 @@ class Files:
 
 # config
 class ENConfig:
+    name = "elastic_nets"
     read_file = True
     file_path = Files.path
     city_file = Files.random_20_cities
@@ -18,6 +19,7 @@ class ENConfig:
 
 
 class SOMConfig:
+    name = "self_organizing_map"
     read_file = True
     file_path = Files.path
     city_file = Files.random_20_cities
@@ -25,6 +27,7 @@ class SOMConfig:
 
 
 class HNConfig:
+    name = "hopfield_net"
     read_file = True
     file_path = Files.path
     city_file = Files.random_10_cities

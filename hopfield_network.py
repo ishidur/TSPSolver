@@ -3,8 +3,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import cm
 from matplotlib import colors
-import os
 import pandas as pd
+import util
 
 window_size = 5
 dpi = 100
@@ -21,7 +21,7 @@ param_d = 500.0
 
 
 @np.vectorize
-def sigmoid(input):
+def sigmoid(input: float) -> float:
     sigmoid_range = 34.538776394910684
     if input <= -sigmoid_range:
         return 1e-15
@@ -31,7 +31,6 @@ def sigmoid(input):
 
 
 def dist(p1, p2):
-    # print(p1, p2, np.linalg.norm(p1 - p2))
     return np.linalg.norm(p1 - p2)
 
 
@@ -82,32 +81,14 @@ def update_inner_vals(nodes_array, inner_vals, weight_matrix, biases):
     return inner_vals + delta
 
 
-# TODO bad code
-def make_directory():
-    dir_name = "./results/"
-    directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
-    dir_name += Config.city_file.replace(".csv", "") + "/"
-    directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
-    dir_name += "hopfield_net/"
-    directory = os.path.dirname(dir_name)
-    try:
-        os.stat(directory)
-    except:
-        os.mkdir(directory)
-    return dir_name
-
-
-def hp_begin(inner_vals_array, nodes_array, weights_matrix, biases_array):
+def hp_begin(
+    inner_vals_array: np.matrix,
+    nodes_array: np.matrix,
+    weights_matrix: np.matrix,
+    biases_array: np.matrix,
+):
     if record:
-        dir_name = make_directory()
+        dir_name = util.make_directory(Config)
         for i in range(iter_lim):
             if i in record_moment:
                 filename = "iteration-" + str(i) + ".png"

@@ -1,7 +1,7 @@
 from config import ENConfig as Config
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+import util
 
 window_size = 5
 dpi = 100
@@ -61,17 +61,10 @@ def update_band(band_array, city_array, weights, k):
     return new_band_array
 
 
-def make_directory():
-    dir_name = "./results/" + Config.city_file.replace(".csv", "") + "/elastic_nets/"
-    directory = os.path.dirname(dir_name)
-    os.makedirs(directory, exist_ok=True)
-    return dir_name
-
-
 def en_begin(band_array, city_array):
     k = k_init
     if record:
-        dir_name = make_directory()
+        dir_name = util.make_directory(Config)
         for i in range(iter_lim):
             if i in record_moment:
                 filename = "iteration-" + str(i) + ".png"
