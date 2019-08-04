@@ -1,6 +1,6 @@
 from config import GifMakerConfig as Config
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+import matplotlib.pyplot as plt  # type: ignore
+import matplotlib.animation as animation  # type: ignore
 import glob
 
 window_size = 5

@@ -1,6 +1,6 @@
 from config import ENConfig as Config
-import numpy as np
-import matplotlib.pyplot as plt
+import numpy as np  # type: ignore
+import matplotlib.pyplot as plt  # type: ignore
 import util
 
 window_size = 5
@@ -16,22 +16,20 @@ record_moment = np.arange(0, iter_lim, 10)
 record = True
 
 
-def phi(distance, k):
+def phi(distance: np.array, k: float) -> np.array:
     return np.exp(-distance ** 2 / (2 * k) ** 2)
 
 
-def dist(p1, p2):
-    return np.linalg.norm(p1 - p2)
-
-
-def calc_dist_matrix(band_array, city_array):
+def calc_dist_matrix(band_array: np.array, city_array: np.array) -> np.array:
     dist_matrix = np.array(
-        [[dist(node, city) for node in band_array] for city in city_array]
+        [[util.dist(node, city) for node in band_array] for city in city_array]
     )
     return dist_matrix
 
 
-def calc_weight_matrix(band_array, city_array, k):
+def calc_weight_matrix(
+    band_array: np.array, city_array: np.array, k: float
+) -> np.array:
     dist_matrix = calc_dist_matrix(band_array, city_array)
     weight_matrix = phi(dist_matrix, k)
     for city_i in range(city_num):
@@ -40,7 +38,9 @@ def calc_weight_matrix(band_array, city_array, k):
     return weight_matrix
 
 
-def update_node(index, band_array, city_array, weights, k):
+def update_node(
+    index: int, band_array: np.array, city_array: np.array, weights: np.array, k: float
+) -> np.array:
     back_i = (index - 1) % node_num
     forward_i = (index + 1) % node_num
     attraction_force = np.zeros(2)
@@ -54,14 +54,16 @@ def update_node(index, band_array, city_array, weights, k):
     return delta_node
 
 
-def update_band(band_array, city_array, weights, k):
+def update_band(
+    band_array: np.array, city_array: np.array, weights: np.array, k: float
+) -> np.array:
     new_band_array = band_array.copy()
     for i in range(node_num):
         new_band_array[i, :] += update_node(i, band_array, city_array, weights, k)
     return new_band_array
 
 
-def en_begin(band_array, city_array):
+def en_begin(band_array: np.array, city_array: np.array):
     k = k_init
     if record:
         dir_name = util.make_directory(Config)

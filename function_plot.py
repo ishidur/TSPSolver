@@ -1,7 +1,7 @@
 import elastic_nets as en
 import self_organizing_map as som
-import numpy as np
-import matplotlib.pyplot as plt
+import numpy as np  # type: ignore
+import matplotlib.pyplot as plt  # type: ignore
 
 window_size = 5
 dpi = 100

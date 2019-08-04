@@ -6,6 +6,8 @@ verify_ssl = true
 [dev-packages]
 black = "==19.3b0"
 pytest = "*"
+flake8 = "*"
+mypy = "*"
 
 [packages]
 matplotlib = "==3.1.1"

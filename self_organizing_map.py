@@ -1,6 +1,6 @@
 from config import SOMConfig as Config
-import numpy as np
-import matplotlib.pyplot as plt
+import numpy as np  # type: ignore
+import matplotlib.pyplot as plt  # type: ignore
 import util
 
 window_size = 5
@@ -10,7 +10,7 @@ node_radius = 0.1
 # b_growth = 1.005
 # b_ceil = 1000
 
-b_init = 10
+b_init = 10.0
 alpha = 0.03
 # b_ceil = 1000
 # mu = 1.0
@@ -26,28 +26,26 @@ record = True
 #     return 0.0
 
 
-def g_func(djj_star, l, g):
+def g_func(djj_star: int, l: float, g: float) -> float:
     if djj_star < l:
         return np.exp(-djj_star ** 2 / g ** 2)
     return 0.0
 
 
-def dist(p1, p2):
-    return np.linalg.norm(p1 - p2)
-
-
-def calc_champ_node(band_array, city):
-    dist_array = np.array([dist(node, city) for node in band_array])
+def calc_champ_node(band_array: np.array, city: np.array) -> int:
+    dist_array = np.array([util.dist(node, city) for node in band_array])
     # find min value index
     return dist_array.argmin()
 
 
-def update_node(node, city, djj_star, beta):
+def update_node(node: np.array, city: np.array, djj_star: int, beta: float) -> np.array:
     delta_node = mu * g_func(djj_star, node_num * 0.2, beta) * (city - node)
     return delta_node
 
 
-def update_band(band_array, city, j_star, beta):
+def update_band(
+    band_array: np.array, city: np.array, j_star: int, beta: float
+) -> np.array:
     new_band_array = band_array.copy()
     for j in range(node_num):
         djj_star = np.amin([np.abs(j - j_star), node_num - np.abs(j - j_star)])
@@ -55,7 +53,7 @@ def update_band(band_array, city, j_star, beta):
     return new_band_array
 
 
-def som_begin(band_array, city_array):
+def som_begin(band_array: np.array, city_array: np.array):
     beta = b_init
     np.random.shuffle(city_array)
     if record:

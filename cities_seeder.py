@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np  # type: ignore
 
 city_num = 20
 file_path = "./coordinates/"

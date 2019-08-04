@@ -1,9 +1,9 @@
 from config import HNConfig as Config
-import numpy as np
-from matplotlib import pyplot as plt
-from matplotlib import cm
-from matplotlib import colors
-import pandas as pd
+import numpy as np  # type: ignore
+from matplotlib import pyplot as plt  # type: ignore
+from matplotlib import cm  # type: ignore
+from matplotlib import colors  # type: ignore
+import pandas as pd  # type: ignore
 import util
 
 window_size = 5
@@ -30,17 +30,13 @@ def sigmoid(input: float) -> float:
     return 1.0 / (1.0 + np.exp(-input / u_0))
 
 
-def dist(p1, p2):
-    return np.linalg.norm(p1 - p2)
-
-
-def kronecker_delta(i, j):
+def kronecker_delta(i: float, j: float) -> float:
     if i == j:
         return 1.0
     return 0.0
 
 
-def calc_weight_matrix(city_array):
+def calc_weight_matrix(city_array: np.array) -> np.array:
     city_num = city_array.shape[0]
     n = city_num ** 2
     tmp = np.zeros((n, n))
@@ -50,7 +46,7 @@ def calc_weight_matrix(city_array):
         for s1 in range(n):
             y = int(s1 / city_num)
             j = s1 % city_num
-            dxy = dist(city_array[x, :], city_array[y, :])
+            dxy = util.dist(city_array[x, :], city_array[y, :])
             tmp[s0, s1] = (
                 -param_a * kronecker_delta(x, y) * (1.0 - kronecker_delta(i, j))
                 - param_b * kronecker_delta(i, j) * (1.0 - kronecker_delta(x, y))
@@ -67,14 +63,19 @@ def calc_weight_matrix(city_array):
     return tmp
 
 
-def calc_bias(city_array):
+def calc_bias(city_array: np.array) -> np.matrix:
     city_num = city_array.shape[0]
     n = city_num ** 2
     tmp = param_c * n * np.ones(n)
     return tmp
 
 
-def update_inner_vals(nodes_array, inner_vals, weight_matrix, biases):
+def update_inner_vals(
+    nodes_array: np.matrix,
+    inner_vals: np.matrix,
+    weight_matrix: np.matrix,
+    biases: np.matrix,
+) -> np.matrix:
     tau = 1.0
     asdf = np.matmul(weight_matrix, nodes_array)
     delta = (-inner_vals / tau + asdf + biases) * delta_t
