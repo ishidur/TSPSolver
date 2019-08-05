@@ -36,7 +36,8 @@ class HNConfig:
 
 class GifMakerConfig:
     __path = "./results/"
-    __problem_set = "random_30_cities/"
+    __problem_set = "random_10_cities/"
     __en_path = "elastic_nets/"
     __som_path = "self_organizing_map/"
-    source_dir = __path + __problem_set + __en_path
+    __hn_path = "hopfield_net/"
+    source_dir = __path + __problem_set + __hn_path
