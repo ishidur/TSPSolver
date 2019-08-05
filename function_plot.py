@@ -1,7 +1,7 @@
 import elastic_nets as en
 import self_organizing_map as som
-import numpy as np
-import matplotlib.pyplot as plt
+import numpy as np  # type: ignore
+import matplotlib.pyplot as plt  # type: ignore
 
 window_size = 5
 dpi = 100
@@ -15,7 +15,7 @@ def plot_en():
     y = en.phi(x, k)
     fig = plt.figure(figsize=figsize, dpi=dpi)
     plt.plot(x, y)
-    plt.xlabel('distance')
+    plt.xlabel("distance")
     plt.grid()
     plt.show()
 
@@ -28,7 +28,7 @@ def plot_som():
     Y = np.array([som.g_func(np.abs(x - 0), x_max * 2, g) for x in X])
     fig = plt.figure(figsize=figsize, dpi=dpi)
     plt.plot(X, Y)
-    plt.xlabel('$|j-{j}^{*}|$')
+    plt.xlabel("$|j-{j}^{*}|$")
     plt.xticks(np.arange(x_min, x_max + 1, 1))
     plt.grid()
     plt.show()
