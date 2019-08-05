@@ -1,7 +1,7 @@
 from config import ENConfig as Config
-import numpy as np
-import matplotlib.pyplot as plt
-import os
+import numpy as np  # type: ignore
+import matplotlib.pyplot as plt  # type: ignore
+import util
 
 window_size = 5
 dpi = 100
@@ -16,20 +16,20 @@ record_moment = np.arange(0, iter_lim, 10)
 record = True
 
 
-def phi(distance, k):
+def phi(distance: np.array, k: float) -> np.array:
     return np.exp(-distance ** 2 / (2 * k) ** 2)
 
 
-def dist(p1, p2):
-    return np.linalg.norm(p1 - p2)
-
-
-def calc_dist_matrix(band_array, city_array):
-    dist_matrix = np.array([[dist(node, city) for node in band_array] for city in city_array])
+def calc_dist_matrix(band_array: np.array, city_array: np.array) -> np.array:
+    dist_matrix = np.array(
+        [[util.dist(node, city) for node in band_array] for city in city_array]
+    )
     return dist_matrix
 
 
-def calc_weight_matrix(band_array, city_array, k):
+def calc_weight_matrix(
+    band_array: np.array, city_array: np.array, k: float
+) -> np.array:
     dist_matrix = calc_dist_matrix(band_array, city_array)
     weight_matrix = phi(dist_matrix, k)
     for city_i in range(city_num):
@@ -38,40 +38,38 @@ def calc_weight_matrix(band_array, city_array, k):
     return weight_matrix
 
 
-def update_node(index, band_array, city_array, weights, k):
+def update_node(
+    index: int, band_array: np.array, city_array: np.array, weights: np.array, k: float
+) -> np.array:
     back_i = (index - 1) % node_num
     forward_i = (index + 1) % node_num
     attraction_force = np.zeros(2)
     for city_i in range(city_num):
-        attraction_force += weights[city_i, index] * \
-                            (city_array[city_i, :] - band_array[index, :])
+        attraction_force += weights[city_i, index] * (
+            city_array[city_i, :] - band_array[index, :]
+        )
     delta_node = alpha * attraction_force + beta * k * (
-            band_array[forward_i, :] - 2 * band_array[index, :] + band_array[back_i, :])
+        band_array[forward_i, :] - 2 * band_array[index, :] + band_array[back_i, :]
+    )
     return delta_node
 
 
-def update_band(band_array, city_array, weights, k):
+def update_band(
+    band_array: np.array, city_array: np.array, weights: np.array, k: float
+) -> np.array:
     new_band_array = band_array.copy()
     for i in range(node_num):
         new_band_array[i, :] += update_node(i, band_array, city_array, weights, k)
     return new_band_array
 
 
-def make_directory():
-    dir_name = './results/' + Config.city_file.replace(
-        '.csv', '') + '/elastic_nets/'
-    directory = os.path.dirname(dir_name)
-    os.makedirs(directory, exist_ok=True)
-    return dir_name
-
-
-def en_begin(band_array, city_array):
+def en_begin(band_array: np.array, city_array: np.array):
     k = k_init
     if record:
-        dir_name = make_directory()
+        dir_name = util.make_directory(Config)
         for i in range(iter_lim):
             if i in record_moment:
-                filename = 'iteration-' + str(i) + '.png'
+                filename = "iteration-" + str(i) + ".png"
                 file_path = dir_name + filename
                 plt.savefig(file_path)
             k = np.amax([k_bottom, k * k_decay])
@@ -80,7 +78,7 @@ def en_begin(band_array, city_array):
             circle_band = np.vstack((band_array, band_array[0, :]))
             plt.title("iteration=" + str(i + 1))
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
-            plt.pause(.001)
+            plt.pause(0.001)
     else:
         i = 1
         while plt.get_fignums():
@@ -91,16 +89,15 @@ def en_begin(band_array, city_array):
             plt.title("iteration=" + str(i))
             elastic_band.set_data(circle_band[:, 0], circle_band[:, 1])
             i += 1
-            plt.pause(.001)
+            plt.pause(0.001)
 
 
 if __name__ == "__main__":
-    if (Config.read_file):
-        np_cities = np.genfromtxt(
-            Config.file_path + Config.city_file, delimiter=',')
+    if Config.read_file:
+        np_cities = np.genfromtxt(Config.file_path + Config.city_file, delimiter=",")
         city_num = np_cities.shape[0]
-        width_x = (np.max(np_cities[:, 0]) - np.min(np_cities[:, 0]))
-        width_y = (np.max(np_cities[:, 1]) - np.min(np_cities[:, 1]))
+        width_x = np.max(np_cities[:, 0]) - np.min(np_cities[:, 0])
+        width_y = np.max(np_cities[:, 1]) - np.min(np_cities[:, 1])
         width = np.amax([width_x, width_y])
         np_cities[:, 0] -= np.min(np_cities[:, 0])
         np_cities[:, 0] /= width
@@ -120,11 +117,15 @@ if __name__ == "__main__":
     node_num = int(city_num * 2.5 + 0.5)
     angles = np.linspace(0, 2 * np.pi, node_num)
     np_band = np.array(
-        [node_radius * np.sin(angles) + center_x, node_radius * np.cos(angles) + center_y]).transpose()
+        [
+            node_radius * np.sin(angles) + center_x,
+            node_radius * np.cos(angles) + center_y,
+        ]
+    ).transpose()
     fig = plt.figure(figsize=figsize, dpi=dpi)
-    plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker='+')
+    plt.scatter(np_cities[:, 0], np_cities[:, 1], s=20, marker="+")
     elastic_band, = plt.plot(np_band[:, 0], np_band[:, 1])
     plt.title("iteration=" + str(0))
     plt.grid()
-    plt.pause(.001)
+    plt.pause(0.001)
     en_begin(np_band, np_cities)
