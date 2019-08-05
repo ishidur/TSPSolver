@@ -8,16 +8,16 @@ import util
 
 window_size = 5
 dpi = 100
-iter_lim = 10000
+iter_lim = 1000
 record_moment = np.arange(0, iter_lim, 10)
-record = False
-delta_t = 0.001
-noise = 0.01
+record = True
+delta_t = 0.01
+noise = 0.001
 u_0 = 0.02
-param_a = 500.0
-param_b = 500.0
-param_c = 200.0
-param_d = 500.0
+param_a = 1.0
+param_b = 1.0
+param_c = 2.0
+param_d = 1.0
 
 
 @np.vectorize
@@ -30,23 +30,23 @@ def sigmoid(input: float) -> float:
     return 1.0 / (1.0 + np.exp(-input / u_0))
 
 
-def kronecker_delta(i: float, j: float) -> float:
+def kronecker_delta(i: int, j: int) -> float:
     if i == j:
         return 1.0
     return 0.0
 
 
 def calc_weight_matrix(city_array: np.array) -> np.array:
-    city_num = city_array.shape[0]
-    n = city_num ** 2
-    tmp = np.zeros((n, n))
+    city_num: int = city_array.shape[0]
+    n: int = city_num ** 2
+    tmp: np.array = np.zeros((n, n))
     for s0 in range(n):
-        x = int(s0 / city_num)
-        i = s0 % city_num
+        x: int = int(s0 / city_num)
+        i: int = s0 % city_num
         for s1 in range(n):
-            y = int(s1 / city_num)
-            j = s1 % city_num
-            dxy = util.dist(city_array[x, :], city_array[y, :])
+            y: int = int(s1 / city_num)
+            j: int = s1 % city_num
+            dxy: float = util.dist(city_array[x, :], city_array[y, :])
             tmp[s0, s1] = (
                 -param_a * kronecker_delta(x, y) * (1.0 - kronecker_delta(i, j))
                 - param_b * kronecker_delta(i, j) * (1.0 - kronecker_delta(x, y))
@@ -58,15 +58,13 @@ def calc_weight_matrix(city_array: np.array) -> np.array:
                     + kronecker_delta(j, (i + 1) % city_num)
                 )
             )
-    df = pd.DataFrame(tmp)
-    df.to_csv("weigths.csv")
     return tmp
 
 
-def calc_bias(city_array: np.array) -> np.matrix:
-    city_num = city_array.shape[0]
-    n = city_num ** 2
-    tmp = param_c * n * np.ones(n)
+def calc_bias(city_array: np.array) -> np.array:
+    city_num: int = city_array.shape[0]
+    n: int = city_num ** 2
+    tmp: np.array = param_c * city_num * np.ones(n)
     return tmp
 
 
@@ -77,8 +75,8 @@ def update_inner_vals(
     biases: np.matrix,
 ) -> np.matrix:
     tau = 1.0
-    asdf = np.matmul(weight_matrix, nodes_array)
-    delta = (-inner_vals / tau + asdf + biases) * delta_t
+    asdf: np.matrix = np.matmul(weight_matrix, nodes_array)
+    delta: np.matrix = (-inner_vals / tau + asdf + biases) * delta_t
     return inner_vals + delta
 
 
@@ -87,13 +85,13 @@ def hp_begin(
     nodes_array: np.matrix,
     weights_matrix: np.matrix,
     biases_array: np.matrix,
-):
+) -> None:
     if record:
-        dir_name = util.make_directory(Config)
+        dir_name: str = util.make_directory(Config)
         for i in range(iter_lim):
             if i in record_moment:
-                filename = "iteration-" + str(i) + ".png"
-                file_path = dir_name + filename
+                filename: str = "iteration-" + str(i) + ".png"
+                file_path: str = dir_name + filename
                 plt.savefig(file_path)
             inner_vals_array = update_inner_vals(
                 nodes_array, inner_vals_array, weights_matrix, biases_array
@@ -147,6 +145,8 @@ if __name__ == "__main__":
     inner_vals = np.matrix((np.random.random((city_num ** 2)) - 0.5) * noise).T
     nodes = np.matrix(sigmoid(inner_vals))
     weights = np.matrix(calc_weight_matrix(np_cities))
+    df = pd.DataFrame(weights)
+    df.to_csv("weigths.csv", header=False, index=False)
     biases = np.matrix(calc_bias(np_cities)).T
     fig = plt.figure(figsize=figsize, dpi=dpi)
     mat_visual = plt.matshow(
